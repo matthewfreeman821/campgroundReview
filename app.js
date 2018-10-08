@@ -41,7 +41,7 @@ app.get('/campgrounds', function(req, res) {
         if(err) {
             console.log(err);
         } else {
-            res.render('campgrounds', {campgrounds: allCampgrounds});
+            res.render('index', {campgrounds: allCampgrounds});
         }
     })
 })
@@ -71,7 +71,15 @@ app.get('/campgrounds/new', function(req, res) {
 
 //SHOW route - shows more info on one campground
 app.get('/campgrounds/:id', function(req, res) {
-    res.render('show');
+    //find the campground with provided ID
+    Campground.findById(req.params.id, function(err, foundCampground) {
+        if(err) {
+            console.log(err);
+        } else {
+            //render show template with that campground
+            res.render('show', {campground: foundCampground});
+        }
+    });
 })
 
 
