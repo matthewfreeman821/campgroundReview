@@ -13,7 +13,7 @@ app.get('/campgrounds', function(req, res) {
         {name: "Granite Hill", image: "https://pixabay.com/get/e83db50929f0033ed1584d05fb1d4e97e07ee3d21cac104496f9c179a6e8b0b1_340.jpg"},
         {name: "Mountain Goat's Rest", image: "https://pixabay.com/get/e837b1072af4003ed1584d05fb1d4e97e07ee3d21cac104496f9c179a6e8b0b1_340.jpg"}
     ];
-    res.render('campgrounds');
+    res.render('campgrounds', {campgrounds: campgrounds});
 })
 
 
