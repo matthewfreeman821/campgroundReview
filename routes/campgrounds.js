@@ -58,18 +58,14 @@ router.get('/:id', function(req, res) {
 });
 
 //EDIT campground route
-router.get('/:id/edit', function(req, res) {
+router.get('/:id/edit', checkCampgroundOwnership, function(req, res) {
     Campground.findById(req.params.id, function(err, foundCampground) {
-        if(err) {
-            res.redirect('/campgrounds');
-        } else {
-            res.render('campgrounds/edit', {campground: foundCampground});
-        }
+        res.render('campgrounds/edit', {campground: foundCampground});
     });
 });
 
 //UPDATE campground route
-router.put('/:id', function(req, res) {
+router.put('/:id', checkCampgroundOwnership, function(req, res) {
     //find and update the correct campground
     Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground) {
         if(err) {
@@ -82,7 +78,7 @@ router.put('/:id', function(req, res) {
 });
 
 //DESTROY campground route
-router.delete('/:id', function(req, res) {
+router.delete('/:id', checkCampgroundOwnership, function(req, res) {
     Campground.findByIdAndRemove(req.params.id, function(err) {
         if(err) {
             res.redirect('/campgrounds');
@@ -99,5 +95,29 @@ function isLoggedIn(req, res, next){
     }
     res.redirect('/login');
 };
+
+function checkCampgroundOwnership(req, res, next) {
+    //if user logged in
+    if(req.isAuthenticated()) {
+        Campground.findById(req.params.id, function(err, foundCampground) {
+            if(err) {
+                res.redirect('back');
+            } else {
+                //does user own campground?
+                //foundCampground.author.id is a mongoose obj, req.user._id is a string, hence the .equals()
+                if(foundCampground.author.id.equals(req.user._id)) {
+                    next();
+                } else {
+                    res.redirect('back');
+                }
+            }
+        });
+    } else{
+        //otherwise, redirect
+        res.redirect('back');
+    }
+    //if not, redirect
+};
+    
 
 module.exports = router;
