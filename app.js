@@ -9,6 +9,7 @@ var express          = require('express'),
     Campground       = require('./models/campground'),
     Comment          = require('./models/comment'),
     User             = require('./models/user'),
+    moment           = require('moment'),
     seedDB           = require("./seeds");
 
 //requiring routes
@@ -24,6 +25,7 @@ app.use(methodOverride('_method'));
 app.use(flash());
 // seedDB(); //seed the database
 
+app.locals.moment = require('moment');
 //PASSPORT CONFIGURATION
 app.use(require('express-session')({
     secret: "Once upon a time a long long time ago",
